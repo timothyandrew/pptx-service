@@ -3,6 +3,8 @@ from pptx.dml.color import RGBColor
 from pptx.util import Pt, Inches
 from pptx.enum.text import PP_ALIGN
 from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.dml.color import RGBColor
 import re
 from io import BytesIO
 
@@ -13,26 +15,13 @@ class Presentation(object):
     self.presentation = pptx.Presentation()
 
   def add_title_slide(self):
-    slide = self.presentation.slides.add_slide(self.presentation.slide_layouts[0])
-    left = top = width = height = Inches(1)
-    content = slide.shapes[0]
-
-    textframe = content.textframe
-    textframe.clear()
-    textframe.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
-    textframe.vertical_anchor = MSO_ANCHOR.TOP
-    paragraph = textframe.paragraphs[0]
-    paragraph.alignment = PP_ALIGN.CENTER
-    run = paragraph.add_run()
-    font = run.font
-    font.name = 'Constantia'
-    font.size = Pt(40)
-    font.bold = True
-
-    run.text = self.title
-
-  def add_slide(self, text):
     slide = self.presentation.slides.add_slide(self.presentation.slide_layouts[6])
+
+    shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(-1), Inches(-1), Inches(15), Inches(10))
+    fill = shape.fill
+    fill.solid()
+    fill.fore_color.rgb = RGBColor(0, 0, 0)
+
     left = top = width = height = Inches(1)
     content = slide.shapes.add_textbox(Inches(4.5), Inches(2), width, height)
 
@@ -46,6 +35,34 @@ class Presentation(object):
     font = run.font
     font.name = 'Constantia'
     font.size = Pt(40)
+    font.bold = True
+    font.color.rgb = RGBColor(255,255,255)
+
+    run.text = self.title
+
+  def add_slide(self, text):
+    slide = self.presentation.slides.add_slide(self.presentation.slide_layouts[6])
+
+    shape = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(-1), Inches(-1), Inches(15), Inches(10))
+    fill = shape.fill
+    fill.solid()
+    fill.fore_color.rgb = RGBColor(0, 0, 0)
+
+
+    left = top = width = height = Inches(1)
+    content = slide.shapes.add_textbox(Inches(4.5), Inches(2), width, height)
+
+    textframe = content.textframe
+    textframe.clear()
+    textframe.auto_size = MSO_AUTO_SIZE.SHAPE_TO_FIT_TEXT
+    textframe.vertical_anchor = MSO_ANCHOR.TOP
+    paragraph = textframe.paragraphs[0]
+    paragraph.alignment = PP_ALIGN.CENTER
+    run = paragraph.add_run()
+    font = run.font
+    font.name = 'Constantia'
+    font.size = Pt(40)
+    font.color.rgb = RGBColor(255,255,255)
 
     run.text = text
 
